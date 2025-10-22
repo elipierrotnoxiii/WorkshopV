@@ -755,6 +755,7 @@ GameObject:
   - component: {fileID: 2536654397093377292}
   - component: {fileID: 6828137997580719663}
   - component: {fileID: 7827136950316174748}
+  - component: {fileID: 7765800437741149808}
   m_Layer: 0
   m_Name: CardView
   m_TagString: Untagged
@@ -816,3 +817,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.6, y: 4.8, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!210 &7765800437741149808
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8292715575995562179}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
