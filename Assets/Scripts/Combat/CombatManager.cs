@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CombatManager : MonoBehaviour
 {
@@ -8,105 +9,109 @@ public class CombatManager : MonoBehaviour
     public DeckManager deckManager;
     public Player player;
     public Enemy enemy;
+    public HandView handView;
+    public CardViewCreator cardViewCreator;
 
-    private List<Card> currentHand = new List<Card>();
-    private List<Card> playedCardsThisTurn = new List<Card>();
+    [Header("Gameplay")]
+    public int maxPlaysPerTurn = 3;
+
+    private List<Card> currentHand = new();
+    private List<Card> playedCardsThisTurn = new();
+    private List<CardView> currentCardViews = new();
+
     private int cardsPlayed = 0;
     private bool playerTurn = true;
 
     private void Start()
     {
         deckManager.InitializeDeck();
-        StartPlayerTurn();
+        StartCoroutine(StartPlayerTurn());
     }
 
-    private void Update()
+    void Update()
     {
-        if (!playerTurn) return;
-
-        // Press keys 1�5 to play cards
-        if (Input.GetKeyDown(KeyCode.Alpha1)) PlayCard(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) PlayCard(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) PlayCard(2);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) PlayCard(3);
-        if (Input.GetKeyDown(KeyCode.Alpha5)) PlayCard(4);
-
-        // End turn
         if (Input.GetKeyDown(KeyCode.Space)) EndPlayerTurn();
     }
 
-    [ContextMenu("Start Turn")]
-    void StartPlayerTurn()
+    private IEnumerator StartPlayerTurn()
     {
         playerTurn = true;
         cardsPlayed = 0;
         playedCardsThisTurn.Clear();
-        currentHand = deckManager.Draw(5);
-        player.block = 0; // Reset block each turn
+        player.block = 0;
+
+        int cardsToDraw = currentHand.Count == 0 ? 5 : 1;
+        List<Card> drawnCards = deckManager.Draw(cardsToDraw);
+        currentHand.AddRange(drawnCards);
+
+        // Agregar cartas visualmente una por una
+        foreach (Card card in drawnCards)
+        {
+            CardConstructor constructor = new CardConstructor(card);
+            CardView cardView = cardViewCreator.CreateCardView(constructor, Vector3.zero, Quaternion.identity);
+            currentCardViews.Add(cardView);
+
+            // Agregar click handler
+            var handler = cardView.gameObject.AddComponent<CardViewClickHandler>();
+            handler.Initialize(this, cardView);
+
+            // Esperar a que se agregue y se posicione antes de la siguiente
+            yield return handView.StartCoroutine(handView.AddCard(cardView));
+        }
 
         Debug.Log("----- PLAYER TURN -----");
-        foreach (var card in currentHand)
-            Debug.Log($"Drew: {card.cardName}");
+        foreach (var c in currentHand)
+            Debug.Log($"Drew: {c.Title}");
     }
 
-    [ContextMenu("End Turn")]
-    void EndPlayerTurn()
+    public void PlayCardVisual(CardView cardView)
     {
-        playerTurn = false;
+        if (!playerTurn) return;
 
-        // Return both played and unplayed cards
-        List<Card> allCardsThisTurn = new List<Card>();
-        allCardsThisTurn.AddRange(currentHand);
-        allCardsThisTurn.AddRange(playedCardsThisTurn);
+        Card card = cardView.CardConstructor.SourceCard;
 
-        deckManager.ReturnCards(currentHand);
-
-        currentHand.Clear();
-        playedCardsThisTurn.Clear();
-
-        Debug.Log("Player turn ended. Cards returned to deck.");
-        StartCoroutine(EnemyTurnRoutine());
-    }
-
-    IEnumerator EnemyTurnRoutine()
-    {
-        Debug.Log("----- ENEMY TURN -----");
-        yield return new WaitForSeconds(1f); // small delay for readability
-
-        enemy.EnemyTurn(player);
-
-        yield return new WaitForSeconds(1f); // pause before next player turn
-        StartPlayerTurn();
-    }
-
-    public void PlayCard(int index)
-    {
-        if (index < 0 || index >= currentHand.Count)
+        int index = currentCardViews.IndexOf(cardView);
+        if (index < 0)
         {
-            Debug.LogWarning("Invalid card index!");
-            return;
-        }
-        if (cardsPlayed >= 3)
-        {
-            Debug.Log("Already played 3 cards this turn.");
+            Debug.LogWarning("CardView not found in hand.");
             return;
         }
 
-        // Play and remove the card
-        Card card = currentHand[index];
-        card.Play(player, enemy);
+        if (cardsPlayed >= maxPlaysPerTurn)
+        {
+            Debug.Log("Already played maximum cards this turn.");
+            return;
+        }
+
+        // Aplicar efecto
+        switch (card.EffectType)
+        {
+            case CardEffectType.Damage:
+                enemy.TakeDamage(card.Value);
+                break;
+            case CardEffectType.Heal:
+                player.Heal(card.Value);
+                break;
+            case CardEffectType.Block:
+                player.AddBlock(card.Value);
+                break;
+        }
+
         cardsPlayed++;
-
-        // Move played card to separate list
         playedCardsThisTurn.Add(card);
-        currentHand.RemoveAt(index);
+        currentHand.Remove(card);
 
-        Debug.Log($"Played {card.cardName}. {3 - cardsPlayed} plays remaining this turn.");
+        // Quitamos la carta de la lista antes de animar para evitar referencias rotas
+        currentCardViews.RemoveAt(index);
 
-        // Show remaining hand for debugging
+        // Animación y desactivación en vez de destruir
+        StartCoroutine(AnimateAndRemoveCard(cardView));
+
+        Debug.Log($"Played {card.Title}. Remaining plays: {maxPlaysPerTurn - cardsPlayed}");
+
         if (currentHand.Count > 0)
         {
-            string remaining = string.Join(", ", currentHand.ConvertAll(c => c.cardName));
+            string remaining = string.Join(", ", currentHand.ConvertAll(c => c.Title));
             Debug.Log($"Cards remaining in hand: {remaining}");
         }
         else
@@ -115,12 +120,53 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    //[Header("Debug Controls")]
-    //public int testCardIndex = 0;
+    private IEnumerator AnimateAndRemoveCard(CardView cardView)
+    {
+        if (cardView == null) yield break;
 
-    //[ContextMenu("Play Test Card")]
-    //public void PlayTestCard()
-    //{
-    //    PlayCard(testCardIndex);
-    //}
+        // Animación de desaparición
+        yield return cardView.transform.DOScale(Vector3.zero, 0.15f).WaitForCompletion();
+
+        // Solo desactivar en vez de destruir
+        cardView.gameObject.SetActive(false);
+
+        // Reorganizar solo si quedan cartas activas
+        if (currentCardViews.Count > 0)
+        {
+            yield return handView.StartCoroutine(handView.UpdateCardPositions(0.15f));
+        }
+    }
+
+    [ContextMenu("End Turn")]
+    public void EndPlayerTurn()
+    {
+        if (!playerTurn) return;
+        playerTurn = false;
+
+        // Devolver cartas no jugadas al mazo
+        deckManager.ReturnCards(currentHand);
+        currentHand.Clear();
+        playedCardsThisTurn.Clear();
+
+        // Desactivar visuales restantes
+        foreach (var cv in currentCardViews)
+        {
+            if (cv != null)
+                cv.gameObject.SetActive(false);
+        }
+        currentCardViews.Clear();
+
+        StartCoroutine(EnemyTurnRoutine());
+    }
+
+    private IEnumerator EnemyTurnRoutine()
+    {
+        Debug.Log("----- ENEMY TURN -----");
+        yield return new WaitForSeconds(1f);
+
+        enemy.EnemyTurn(player);
+
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(StartPlayerTurn());
+    }
 }

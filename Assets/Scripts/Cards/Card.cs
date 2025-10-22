@@ -1,19 +1,28 @@
 using UnityEngine;
+public enum CardEffectType
+{
+    Damage,
+    Heal,
+    Block
+}
 
 [CreateAssetMenu(fileName = "NewCard", menuName = "Cards/New Card")]
 public class Card : ScriptableObject
 {
-    public string cardName = "Strike";
-    public int damage = 0;
-    public int block = 0;
-    public int heal = 0;
+    public string Title;
+    public CardEffectType EffectType;
+    public int Value;
 
-    public void Play(Player player, Enemy enemy)
+    // Genera la descripción en el formato correcto
+    public string GetFormattedDescription()
     {
-        if (damage > 0) enemy.TakeDamage(damage);
-        if (block > 0) player.AddBlock(block);
-        if (heal > 0) player.Heal(heal);
-        Debug.Log($"{cardName} played! (Dmg:{damage} Blk:{block} Heal:{heal})");
+        return EffectType switch
+        {
+            CardEffectType.Damage => $"Deals {Value} damage.",
+            CardEffectType.Heal => $"Heals {Value} HP.",
+            CardEffectType.Block => $"Gives {Value} block.",
+            _ => "No effect."
+        };
     }
 }
 
