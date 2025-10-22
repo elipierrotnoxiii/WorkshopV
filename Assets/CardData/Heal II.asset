@@ -10,9 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ce9bb8e42e3e664a9ac13cd55d66770, type: 3}
-  m_Name: Heal I
+  m_Name: Heal II
   m_EditorClassIdentifier: 
-  cardName: Heal I
-  damage: 0
-  block: 0
-  heal: 1
+  Title: Heal II
+  EffectType: 1
+  Value: 2

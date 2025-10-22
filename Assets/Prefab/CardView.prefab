@@ -335,8 +335,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.17, y: -0.47}
-  m_SizeDelta: {x: 8, y: 8}
+  m_AnchoredPosition: {x: -0.01, y: -0.47}
+  m_SizeDelta: {x: 14.24, y: 8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &8225581459663536883
 MeshRenderer:
@@ -432,14 +432,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 33.49
+  m_fontSizeBase: 33.49
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -470,7 +470,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -11.123069, y: 0, z: -11.419846, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -735,7 +735,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -5.60215, y: 0, z: -5.081024, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -791,9 +791,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a23aaf5eecb41d18aaab1257faeeb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 5540464392510749493}
-  description: {fileID: 5708501156091121542}
-  mana: {fileID: 6107500129596666545}
+  titleText: {fileID: 5540464392510749493}
+  descriptionText: {fileID: 5708501156091121542}
   imageSR: {fileID: 1441880275397264904}
   wrapper: {fileID: 6213662909108252088}
 --- !u!65 &7827136950316174748
