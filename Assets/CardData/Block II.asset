@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce9bb8e42e3e664a9ac13cd55d66770, type: 3}
   m_Name: Block II
   m_EditorClassIdentifier: 
-  Title: Block
+  Title: Block II
   EffectType: 2
   Value: 4

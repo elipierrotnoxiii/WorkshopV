@@ -60,8 +60,13 @@ public class CombatManager : MonoBehaviour
         }
 
         Debug.Log("----- PLAYER TURN -----");
+        BattleLogUI.Instance.AddMessage("----- PLAYER TURN -----");
         foreach (var c in currentHand)
+        {
             Debug.Log($"Drew: {c.Title}");
+            BattleLogUI.Instance.AddMessage($"Drew: {c.Title}");
+        }
+
     }
 
     public void PlayCardVisual(CardView cardView)
@@ -74,12 +79,15 @@ public class CombatManager : MonoBehaviour
         if (index < 0)
         {
             Debug.LogWarning("CardView not found in hand.");
+            BattleLogUI.Instance.AddMessage("CardView not found in hand.");
+
             return;
         }
 
         if (cardsPlayed >= maxPlaysPerTurn)
         {
             Debug.Log("Already played maximum cards this turn.");
+            BattleLogUI.Instance.AddMessage("Already played maximum cards this turn.");
             return;
         }
 
@@ -108,15 +116,18 @@ public class CombatManager : MonoBehaviour
         StartCoroutine(AnimateAndRemoveCard(cardView));
 
         Debug.Log($"Played {card.Title}. Remaining plays: {maxPlaysPerTurn - cardsPlayed}");
+        BattleLogUI.Instance.AddMessage($"Played {card.Title}. Remaining plays: {maxPlaysPerTurn - cardsPlayed}");
 
         if (currentHand.Count > 0)
         {
             string remaining = string.Join(", ", currentHand.ConvertAll(c => c.Title));
             Debug.Log($"Cards remaining in hand: {remaining}");
+            BattleLogUI.Instance.AddMessage($"Cards remaining in hand: {remaining}");
         }
         else
         {
             Debug.Log("No cards left in hand this turn.");
+            BattleLogUI.Instance.AddMessage("No cards left in hand this turn.");
         }
     }
 
@@ -143,12 +154,18 @@ public class CombatManager : MonoBehaviour
         if (!playerTurn) return;
         playerTurn = false;
 
-        // Devolver cartas no jugadas al mazo
-        deckManager.ReturnCards(currentHand);
+        // Combine all cards played and unplayed
+        List<Card> allCardsThisTurn = new List<Card>();
+        allCardsThisTurn.AddRange(currentHand);
+        allCardsThisTurn.AddRange(playedCardsThisTurn);
+
+        // Return all cards (played + unplayed) to the deck
+        deckManager.ReturnCards(allCardsThisTurn);
+
         currentHand.Clear();
         playedCardsThisTurn.Clear();
 
-        // Desactivar visuales restantes
+        // Deactivate all remaining visuals
         foreach (var cv in currentCardViews)
         {
             if (cv != null)
@@ -156,12 +173,17 @@ public class CombatManager : MonoBehaviour
         }
         currentCardViews.Clear();
 
+        Debug.Log("Player turn ended. All cards returned to deck.");
+        BattleLogUI.Instance.AddMessage("Player turn ended. All cards returned to deck.");
+
         StartCoroutine(EnemyTurnRoutine());
     }
+
 
     private IEnumerator EnemyTurnRoutine()
     {
         Debug.Log("----- ENEMY TURN -----");
+        BattleLogUI.Instance.AddMessage("----- ENEMY TURN -----");
         yield return new WaitForSeconds(1f);
 
         enemy.EnemyTurn(player);
