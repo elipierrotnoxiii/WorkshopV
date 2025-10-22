@@ -280,6 +280,8 @@ MonoBehaviour:
   enemyName: Slime
   maxHP: 30
   currentHP: 0
+  minDamage: 4
+  maxDamage: 8
 --- !u!136 &1012372305
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -409,8 +411,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 96a8b39d4bf6d7847a025f95c7032d3f, type: 2}
   - {fileID: 11400000, guid: 96a8b39d4bf6d7847a025f95c7032d3f, type: 2}
   - {fileID: 11400000, guid: 96a8b39d4bf6d7847a025f95c7032d3f, type: 2}
-  - {fileID: 11400000, guid: 96a8b39d4bf6d7847a025f95c7032d3f, type: 2}
-  - {fileID: 11400000, guid: 93b4f18471b0c4346804ce93d2afb0ff, type: 2}
   - {fileID: 11400000, guid: 93b4f18471b0c4346804ce93d2afb0ff, type: 2}
   - {fileID: 11400000, guid: 93b4f18471b0c4346804ce93d2afb0ff, type: 2}
   - {fileID: 11400000, guid: 93b4f18471b0c4346804ce93d2afb0ff, type: 2}
@@ -422,6 +422,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 017486e17c6ae1d4285730bd4590cc2d, type: 2}
   - {fileID: 11400000, guid: fc8646c99e079494bb1fe3cc025c6785, type: 2}
   - {fileID: 11400000, guid: fc8646c99e079494bb1fe3cc025c6785, type: 2}
+  - {fileID: 11400000, guid: 409b008fd4f4a2d48a599cc89c744e8d, type: 2}
+  - {fileID: 11400000, guid: 409b008fd4f4a2d48a599cc89c744e8d, type: 2}
 --- !u!114 &1455143745
 MonoBehaviour:
   m_ObjectHideFlags: 0

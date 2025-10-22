@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Strike III
   m_EditorClassIdentifier: 
   cardName: Strike III
-  damage: 3
+  damage: 6
   block: 0
   heal: 0
