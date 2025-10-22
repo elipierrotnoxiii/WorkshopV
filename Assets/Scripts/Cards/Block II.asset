@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Block II
   damage: 0
-  block: 2
+  block: 4
   heal: 0

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,31 +10,73 @@ public class CombatManager : MonoBehaviour
     public Enemy enemy;
 
     private List<Card> currentHand = new List<Card>();
+    private List<Card> playedCardsThisTurn = new List<Card>();
     private int cardsPlayed = 0;
+    private bool playerTurn = true;
 
     private void Start()
     {
         deckManager.InitializeDeck();
-        StartTurn();
+        StartPlayerTurn();
+    }
+
+    private void Update()
+    {
+        if (!playerTurn) return;
+
+        // Press keys 1–5 to play cards
+        if (Input.GetKeyDown(KeyCode.Alpha1)) PlayCard(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) PlayCard(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) PlayCard(2);
+        if (Input.GetKeyDown(KeyCode.Alpha4)) PlayCard(3);
+        if (Input.GetKeyDown(KeyCode.Alpha5)) PlayCard(4);
+
+        // End turn
+        if (Input.GetKeyDown(KeyCode.Space)) EndPlayerTurn();
     }
 
     [ContextMenu("Start Turn")]
-    public void StartTurn()
+    void StartPlayerTurn()
     {
+        playerTurn = true;
         cardsPlayed = 0;
+        playedCardsThisTurn.Clear();
         currentHand = deckManager.Draw(5);
-        Debug.Log("----- NEW TURN -----");
+        player.block = 0; // Reset block each turn
+
+        Debug.Log("----- PLAYER TURN -----");
         foreach (var card in currentHand)
             Debug.Log($"Drew: {card.cardName}");
     }
 
     [ContextMenu("End Turn")]
-    public void EndTurn()
+    void EndPlayerTurn()
     {
+        playerTurn = false;
+
+        // Return both played and unplayed cards
+        List<Card> allCardsThisTurn = new List<Card>();
+        allCardsThisTurn.AddRange(currentHand);
+        allCardsThisTurn.AddRange(playedCardsThisTurn);
+
         deckManager.ReturnCards(currentHand);
+
         currentHand.Clear();
-        Debug.Log("Turn ended. Cards returned to deck.\n");
-        StartTurn();
+        playedCardsThisTurn.Clear();
+
+        Debug.Log("Player turn ended. Cards returned to deck.");
+        StartCoroutine(EnemyTurnRoutine());
+    }
+
+    IEnumerator EnemyTurnRoutine()
+    {
+        Debug.Log("----- ENEMY TURN -----");
+        yield return new WaitForSeconds(1f); // small delay for readability
+
+        enemy.EnemyTurn(player);
+
+        yield return new WaitForSeconds(1f); // pause before next player turn
+        StartPlayerTurn();
     }
 
     public void PlayCard(int index)
@@ -54,7 +97,8 @@ public class CombatManager : MonoBehaviour
         card.Play(player, enemy);
         cardsPlayed++;
 
-        // Remove the card from hand so it can't be played again this turn
+        // Move played card to separate list
+        playedCardsThisTurn.Add(card);
         currentHand.RemoveAt(index);
 
         Debug.Log($"Played {card.cardName}. {3 - cardsPlayed} plays remaining this turn.");
@@ -71,12 +115,12 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    [Header("Debug Controls")]
-    public int testCardIndex = 0;
+    //[Header("Debug Controls")]
+    //public int testCardIndex = 0;
 
-    [ContextMenu("Play Test Card")]
-    public void PlayTestCard()
-    {
-        PlayCard(testCardIndex);
-    }
+    //[ContextMenu("Play Test Card")]
+    //public void PlayTestCard()
+    //{
+    //    PlayCard(testCardIndex);
+    //}
 }

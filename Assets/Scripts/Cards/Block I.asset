@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce9bb8e42e3e664a9ac13cd55d66770, type: 3}
   m_Name: Block I
   m_EditorClassIdentifier: 
-  cardName: Block
+  cardName: Block I
   damage: 0
-  block: 1
+  block: 2
   heal: 0

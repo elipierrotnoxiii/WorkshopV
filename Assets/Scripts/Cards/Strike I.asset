@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Strike I
   m_EditorClassIdentifier: 
   cardName: Strike I
-  damage: 1
+  damage: 2
   block: 0
   heal: 0
