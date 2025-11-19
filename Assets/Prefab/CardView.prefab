@@ -104,7 +104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7555519454377256318
 RectTransform:
   m_ObjectHideFlags: 0
@@ -403,7 +403,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '99
+  m_text: 'Title
 
 '
   m_isRightToLeft: 0
@@ -791,10 +791,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a23aaf5eecb41d18aaab1257faeeb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  titleText: {fileID: 5540464392510749493}
-  descriptionText: {fileID: 5708501156091121542}
+  title: {fileID: 5540464392510749493}
+  description: {fileID: 5708501156091121542}
+  mana: {fileID: 6107500129596666545}
   imageSR: {fileID: 1441880275397264904}
   wrapper: {fileID: 6213662909108252088}
+  dropLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!65 &7827136950316174748
 BoxCollider:
   m_ObjectHideFlags: 0
