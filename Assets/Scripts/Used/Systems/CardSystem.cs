@@ -62,7 +62,6 @@ public class CardSystem : Singleton<CardSystem>
     {
         foreach (var card in hand)
         {
-            discardPile.Add(card);
             CardView cardView = handView.RemoveCard(card);
             yield return DiscardCard(cardView);
         }
@@ -70,19 +69,22 @@ public class CardSystem : Singleton<CardSystem>
     }
     private IEnumerator PlayCardPerformer(PlayCardGA playCardGA)
     {
-        Card card = playCardGA.Card;    // reference null Fix
-        hand.Remove(card);              // reference null Fix
-        discardPile.Add(card);          // reference null Fix
-        //hand.Remove(playCardGA.Card); // reference null Fix
+        hand.Remove(playCardGA.Card);
         CardView cardView = handView.RemoveCard(playCardGA.Card);
         yield return DiscardCard(cardView);
 
         SpendManaGA spendManaGA = new(playCardGA.Card.Mana);
         ActionSystem.Instance.AddReaction(spendManaGA);
 
-        foreach (var effect in playCardGA.Card.Effects)
+        if(playCardGA.Card.ManualtargetEffect != null)
         {
-            PerformEffectGA performEffectGA = new(effect);
+            PerformEffectGA performEffectGA = new(playCardGA.Card.ManualtargetEffect, new() { playCardGA.ManualTarget});
+            ActionSystem.Instance.AddReaction(performEffectGA);
+        }
+        foreach (var effectWrapper in playCardGA.Card.OtherEffects)
+        {
+            List<CombatantView> targets = effectWrapper.TargetMode.GetTargets();
+            PerformEffectGA performEffectGA = new(effectWrapper.Effect,targets);
             ActionSystem.Instance.AddReaction(performEffectGA);
         }
     }
@@ -116,6 +118,7 @@ public class CardSystem : Singleton<CardSystem>
     }
     private IEnumerator DiscardCard(CardView cardView)
     {
+        discardPile.Add(cardView.Card);
         cardView.transform.DOScale(Vector3.zero, 0.15f);
         Tween tween = cardView.transform.DOMove(discardPilePoint.position, 0.15f);
         yield return tween.WaitForCompletion();

@@ -10,27 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8060a2a7e6850a741b13a390a402ff81, type: 3}
-  m_Name: Draw
+  m_Name: Arrow Rain
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Draw 2 cards.
+  <Description>k__BackingField: Deal 10 Damage to all enemies.
   <Mana>k__BackingField: 1
-  <Image>k__BackingField: {fileID: 21300000, guid: 9a2cdcbe2a3d54de097e0fe98449a11e, type: 3}
+  <Image>k__BackingField: {fileID: 21300000, guid: 75d57206a728b46ec9701fb69974a91d, type: 3}
   <ManualTargetEffect>k__BackingField:
     rid: -2
   <OtherEffects>k__BackingField:
   - <TargetMode>k__BackingField:
-      rid: 8607259199133450316
+      rid: 8607259199133450318
     <Effect>k__BackingField:
-      rid: 8607259199133450317
+      rid: 8607259199133450315
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 8607259199133450316
-      type: {class: NoTM, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 8607259199133450317
-      type: {class: DrawCardsEffect, ns: , asm: Assembly-CSharp}
+    - rid: 8607259199133450315
+      type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
-        drawAmount: 2
+        damageAmount: 10
+    - rid: 8607259199133450318
+      type: {class: AllEnemiesTM, ns: , asm: Assembly-CSharp}
+      data: 
