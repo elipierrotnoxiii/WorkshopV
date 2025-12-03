@@ -10,27 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8060a2a7e6850a741b13a390a402ff81, type: 3}
-  m_Name: Arrow Rain
+  m_Name: Counter Up
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Deal 3 Damage to all enemies.
+  <Description>k__BackingField: Add 2 counter.
   <Mana>k__BackingField: 1
-  <Image>k__BackingField: {fileID: 21300000, guid: 75d57206a728b46ec9701fb69974a91d, type: 3}
+  <Image>k__BackingField: {fileID: 21300000, guid: a9db7539336634fb8872ddb99890d6c9, type: 3}
   <ManualTargetEffect>k__BackingField:
     rid: -2
   <OtherEffects>k__BackingField:
   - <TargetMode>k__BackingField:
-      rid: 8607259199133450318
+      rid: 1352775394484551951
     <Effect>k__BackingField:
-      rid: 8607259199133450315
+      rid: 1352775394484551952
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 8607259199133450315
-      type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
-      data:
-        damageAmount: 3
-    - rid: 8607259199133450318
-      type: {class: AllEnemiesTM, ns: , asm: Assembly-CSharp}
+    - rid: 1352775394484551951
+      type: {class: HeroTM, ns: , asm: Assembly-CSharp}
       data: 
+    - rid: 1352775394484551952
+      type: {class: AddStatusEffectEffect, ns: , asm: Assembly-CSharp}
+      data:
+        statusEffectType: 2
+        stackCount: 2

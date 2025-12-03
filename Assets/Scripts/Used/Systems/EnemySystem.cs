@@ -31,10 +31,8 @@ public class EnemySystem : Singleton<EnemySystem>
 
     private IEnumerator EnemyTurnPerformer(EnemyTurnGA enemyTurnGA)
     {
-        //Debug.Log("Enemy Turn");
-        //yield return new WaitForSeconds(2f);
-        //Debug.Log("End Enemy Turn");
-        foreach(var enemy in enemyBoardView.EnemyViews)
+        //BattleLogUI.Instance.AddMessage("----- ENEMY TURN -----");
+        foreach (var enemy in enemyBoardView.EnemyViews)
         {
             int burnStacks = enemy.GetStatusEffectStacks(StatusEffectType.BURN);
             if(burnStacks > 0)
