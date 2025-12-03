@@ -553,7 +553,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1338880528}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
         m_MethodName: CloseSettings
         m_Mode: 1
@@ -1181,7 +1181,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1338880528}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
         m_MethodName: OpenSettings
         m_Mode: 1
@@ -1817,10 +1817,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1338880526}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d71fe7c83f00be4c9c17a9f891c37e8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfd23a78cbf0bcd458bc7b0dafb02a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameSceneName: GameScene
+  gameSceneName: Tutorial
   settingsPanel: {fileID: 593539808}
 --- !u!1 &1460813775
 GameObject:

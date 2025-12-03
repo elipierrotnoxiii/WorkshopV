@@ -48,8 +48,6 @@ MonoBehaviour:
   healthText: {fileID: 2607498708357521812}
   spriteRenderer: {fileID: 215214724480940466}
   statusEffectsUI: {fileID: 1631597125270519972}
-  perkData: {fileID: 11400000, guid: a0f1732830766c645b6e3370fc1e48ef, type: 2}
-  perkSystem: {fileID: 0}
 --- !u!1001 &8288928487366958055
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58,6 +56,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3034780920230108656}
     m_Modifications:
+    - target: {fileID: 539418263937848958, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 539418263937848958, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -33.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 539418263937848958, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -113
+      objectReference: {fileID: 0}
+    - target: {fileID: 829138008654620687, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 829138008654620687, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -2.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 829138008654620687, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 975135112241182494, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -98,6 +120,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3472705562365561808, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3472705562365561808, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3472705562365561808, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3472705562365561808, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126985281477344286, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6280132003009346163, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
       propertyPath: m_fontSize
       value: 30
@@ -126,6 +168,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CombatantViewBase
       objectReference: {fileID: 0}
+    - target: {fileID: 8211372928491659861, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8211372928491659861, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 106842f8c62aa469ab377784c71b7732, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
