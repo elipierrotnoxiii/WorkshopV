@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class DamageSystem : MonoBehaviour
 {
+    public GameObject panelGameOver, panelVictory;
+    public int enemiesKilled;
+
     [SerializeField] private GameObject damageVFX;
     private void OnEnable()
     {
@@ -25,11 +28,15 @@ public class DamageSystem : MonoBehaviour
                 {
                     KillEnemyGA killEnemyGA = new(enemyView);
                     ActionSystem.Instance.AddReaction(killEnemyGA);
+                    enemiesKilled += 1;
+                    if (enemiesKilled >= 3)
+                    {
+                        panelVictory.SetActive(true);
+                    }
                 }
                 else
                 {
-                    // Do some game over logic here
-                    // Open Game Over Scene
+                    panelGameOver.SetActive(true);
                 }
             }
         }
