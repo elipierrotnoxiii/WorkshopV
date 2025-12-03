@@ -2,17 +2,21 @@ using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CombatantView : MonoBehaviour
 {
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private StatusEffectsUI statusEffectsUI;
+    //[SerializeField] private PerkData perkData;
+    //private PerkSystem perkSystem;
     public int MaxHealth {  get; private set; }
     public int Currenthealth {  get; private set; }
     private Dictionary<StatusEffectType, int> statusEffects = new();
     protected void SetUpBase(int health, Sprite image)
     {
+        //perkSystem = Object.FindAnyObjectByType<PerkSystem>();
         MaxHealth = Currenthealth = health;
         spriteRenderer.sprite = image;
         UpdateHealthText();
@@ -48,7 +52,22 @@ public class CombatantView : MonoBehaviour
         }
         transform.DOShakePosition(0.2f, 0.5f);
         UpdateHealthText();
+        //CounterAtack();
     }
+    //public void CounterAtack()
+    //{
+    //    perkSystem.RemovePerk(new Perk(perkData));
+    //    int counterStacks = GetStatusEffectStacks(StatusEffectType.COUNTER);
+    //    if (counterStacks > 0)
+    //    {
+    //        perkSystem.AddPerk(new Perk(perkData));
+    //        RemoveStatusEffect(StatusEffectType.COUNTER, 1);
+    //    }
+    //    else
+    //    {
+    //        perkSystem.RemovePerk(new Perk(perkData));
+    //    }
+    //}
     public void AddStatusEffect(StatusEffectType type, int stackCount)
     {
         if (statusEffects.ContainsKey(type))

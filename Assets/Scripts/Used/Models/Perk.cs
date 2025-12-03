@@ -8,6 +8,7 @@ public class Perk
     private readonly PerkData data;
     private readonly PerkCondition condition;
     private readonly AutoTargetEffect effect;
+    private HeroView heroView;
     public Perk(PerkData perkData)
     {
         data = perkData;
@@ -24,10 +25,12 @@ public class Perk
     }
     private void Reaction(GameAction gameAction)
     {
-        if(condition.SubConditionIsMet(gameAction))
+        heroView = Object.FindFirstObjectByType<HeroView>();
+        int cs = heroView.GetStatusEffectStacks(StatusEffectType.COUNTER);
+        if (condition.SubConditionIsMet(gameAction) && cs > 0)
         {
             List<CombatantView> targets = new();
-            if(data.UseActionCasterAsTarget && gameAction is IHaveCaster haveCaster)
+            if (data.UseActionCasterAsTarget && gameAction is IHaveCaster haveCaster)
             {
                 targets.Add(haveCaster.Caster);
             }
@@ -37,6 +40,7 @@ public class Perk
             }
             GameAction perkEffectAction = effect.Effect.GetGameAction(targets, HeroSystem.Instance.HeroView);
             ActionSystem.Instance.AddReaction(perkEffectAction);
+            heroView.RemoveStatusEffect(StatusEffectType.COUNTER, 1);
         }
     }
 }
