@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 
 
-
-
 public class MapManager : MonoBehaviour
 {
     public static MapManager Instance;
@@ -68,8 +66,7 @@ public class MapManager : MonoBehaviour
 
     void ConnectFloors(List<NodeData> from, List<NodeData> to)
 {
-    // Paso 1: asegurar que todos los nodos del piso siguiente
-    // tengan al menos una conexión
+   // PASO 1: asegurar que todos los nodos del piso siguiente tengan entrada
     foreach (var target in to)
     {
         var source = from[Random.Range(0, from.Count)];
@@ -77,7 +74,7 @@ public class MapManager : MonoBehaviour
             source.nextNodes.Add(target);
     }
 
-    // Paso 2: agregar conexiones extra (máx 2 por nodo)
+    // PASO 2: ramificación opcional (máx 2)
     foreach (var source in from)
     {
         if (source.nextNodes.Count >= 2)
@@ -88,6 +85,16 @@ public class MapManager : MonoBehaviour
             var target = to[Random.Range(0, to.Count)];
             if (!source.nextNodes.Contains(target))
                 source.nextNodes.Add(target);
+        }
+    }
+
+    // PASO 3: ningún nodo queda muerto
+    foreach (var source in from)
+    {
+        if (source.nextNodes.Count == 0)
+        {
+            var target = to[Random.Range(0, to.Count)];
+            source.nextNodes.Add(target);
         }
     }
 }
@@ -168,20 +175,47 @@ public class MapManager : MonoBehaviour
 
     public void SelectNode(NodeView node)
     {
-        if (currentNode != null)
-        {
-            if (!currentNode.data.nextNodes.Contains(node.data))
-                return;
+        if (node == null)
+        return;
 
-            currentNode.SetState(NodeState.Visited);
-        }
+    if (node.currentState != NodeState.Available &&
+        node.currentState != NodeState.Current)
+        return;
 
+    if (currentNode == null)
+    {
         currentNode = node;
         node.SetState(NodeState.Current);
+        UnlockNextNodes(node);
+        return;
+    }
 
-        foreach (var next in node.data.nextNodes)
+    if (!currentNode.data.nextNodes.Contains(node.data))
+        return;
+
+    currentNode.SetState(NodeState.Visited);
+    node.SetState(NodeState.Current);
+    currentNode = node;
+
+    UnlockNextNodes(node);
+    }
+
+    void UnlockNextNodes(NodeView node)
+{
+    foreach (var view in nodeLookup.Values)
+    {
+        if (view.currentState == NodeState.Available)
+            view.SetState(NodeState.Locked);
+    }
+
+    foreach (var next in node.data.nextNodes)
+    {
+        if (nodeLookup.TryGetValue(next, out var view))
         {
-            nodeLookup[next].SetState(NodeState.Available);
+            if (view.currentState != NodeState.Visited)
+                view.SetState(NodeState.Available);
         }
     }
+}
+
 }
