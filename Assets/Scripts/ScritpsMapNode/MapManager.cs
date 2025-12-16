@@ -10,7 +10,12 @@ public class MapManager : MonoBehaviour
     public float xSpacing = 3f;
     public float ySpacing = 2.5f;
 
-    int [] floorLayout = { 1, 2 , 3, 4, 1 };
+    List<int[]> possibleLayouts = new()
+{
+    new int[] { 1, 2, 2, 1, 1 },       // 7 nodos
+    new int[] { 1, 2, 2, 2, 1, 1 },    // 9 nodos
+    new int[] { 1, 2, 3, 3, 1, 1 }     // 11 nodos
+};
 
     private NodeView currentNode;
     private List<List<NodeData>> mapData;
@@ -26,13 +31,15 @@ public class MapManager : MonoBehaviour
         GenerateMap();
         DrawMap();
         DrawConnections();
+
+        AutoSelectStartNode();
     }
 
     void GenerateMap()
     {
        mapData = new();
 
-    int[] layout = { 1, 2, 2, 1, 1 }; // TOTAL = 7
+    int[] layout = possibleLayouts[Random.Range(0, possibleLayouts.Count)];
 
     for (int i = 0; i < layout.Length; i++)
     {
@@ -119,6 +126,11 @@ public class MapManager : MonoBehaviour
     void DrawMap()
     {
 
+    if (mapData.Count > 5)
+        xSpacing = 3.5f;
+    else
+        xSpacing = 3f;
+
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -193,11 +205,11 @@ public class MapManager : MonoBehaviour
     if (!currentNode.data.nextNodes.Contains(node.data))
         return;
 
-    currentNode.SetState(NodeState.Visited);
-    node.SetState(NodeState.Current);
-    currentNode = node;
+        currentNode.SetState(NodeState.Visited);
+        node.SetState(NodeState.Current);
+        currentNode = node;
 
-    UnlockNextNodes(node);
+        UnlockNextNodes(node);
     }
 
     void UnlockNextNodes(NodeView node)
@@ -214,6 +226,20 @@ public class MapManager : MonoBehaviour
         {
             if (view.currentState != NodeState.Visited)
                 view.SetState(NodeState.Available);
+        }
+    }
+}
+
+void AutoSelectStartNode()
+{
+    foreach (var pair in nodeLookup)
+    {
+        if (pair.Key.type == NodeType.Start)
+        {
+            currentNode = pair.Value;
+            pair.Value.SetState(NodeState.Current);
+            UnlockNextNodes(pair.Value);
+            break;
         }
     }
 }
