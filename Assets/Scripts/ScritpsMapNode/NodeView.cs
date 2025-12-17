@@ -33,17 +33,24 @@ public class NodeView : MonoBehaviour
         switch (state)
         {
              case NodeState.Current:
-            rend.material.color = Color.yellow;
+            rend.material.color = Color.yellow; // todos Current, incluido Heal
             break;
+
         case NodeState.Available:
-            rend.material.color = Color.white;
+            if (data.type == NodeType.Heal)
+                rend.material.color = Color.cyan; // Heal disponible
+            else
+                rend.material.color = Color.white; // Combat disponible
             break;
+
         case NodeState.Visited:
             rend.material.color = Color.green;
             break;
+
         case NodeState.Locked:
             rend.material.color = Color.gray;
             break;
+
         case NodeState.Blocked:
             rend.material.color = Color.black;
             break;

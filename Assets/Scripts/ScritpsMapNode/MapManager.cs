@@ -53,24 +53,41 @@ public class MapManager : MonoBehaviour
 
     int[] layout = possibleLayouts[Random.Range(0, possibleLayouts.Count)];
 
-    for (int i = 0; i < layout.Length; i++)
+   for (int i = 0; i < layout.Length; i++)
+{
+    var floor = new List<NodeData>();
+
+    for (int j = 0; j < layout[i]; j++)
     {
-        var floor = new List<NodeData>();
+        NodeType type;
 
-        for (int j = 0; j < layout[i]; j++)
+        if (i == 0)
         {
-            NodeType type = NodeType.Combat;
-
-            if (i == 0)
-                type = NodeType.Start;
-            else if (i == layout.Length - 1)
-                type = NodeType.Boss;
-
-            floor.Add(new NodeData { type = type });
+            type = NodeType.Start;
+        }
+        else if (i == layout.Length - 1)
+        {
+            type = NodeType.Boss;
+        }
+        else if (i == layout.Length - 2) // piso antes del Boss
+        {
+            // Forzar que al menos 1 nodo sea Heal
+            if (j == 0) // el primer nodo del piso antes del Boss será Heal
+                type = NodeType.Heal;
+            else
+                type = NodeType.Combat;
+        }
+        else
+        {
+            // Pisos intermedios normales: todos Combat
+            type = NodeType.Combat;
         }
 
-        mapData.Add(floor);
+        floor.Add(new NodeData { type = type });
     }
+
+    mapData.Add(floor);
+}
 
     ConnectMap(mapData);
     }
@@ -202,34 +219,44 @@ public class MapManager : MonoBehaviour
         if (node == null)
         return;
 
-        if (node.currentState != NodeState.Available &&
+    if (node.currentState != NodeState.Available &&
         node.currentState != NodeState.Current)
         return;
 
-        if (currentNode == null)
-        {
-            currentNode = node;
-            node.SetState(NodeState.Current);
-            UnlockNextNodes(node);
-            return;
-        }
-
-        if (!currentNode.data.nextNodes.Contains(node.data))
-            return;
-
-        // SOLO combatimos, no desbloqueamos aún
-        if (node.data.type == NodeType.Combat)
-        {
-            currentNode = node;
-            node.SetState(NodeState.Current);
-            BattleFlowController.Instance.StartCombat(node.data);
-            return;
-        }
-
+    if (currentNode == null)
+    {
+        currentNode = node;
+        node.SetState(NodeState.Current);
+        UnlockNextNodes(node);
+        return;
     }
+
+    if (!currentNode.data.nextNodes.Contains(node.data))
+        return;
+
+    // Nodo de combate
+    if (node.data.type == NodeType.Combat)
+    {
+        currentNode = node;
+        node.SetState(NodeState.Current);
+        BattleFlowController.Instance.StartCombat(node.data);
+        return;
+    }
+
+    // Nodo de curación
+    if (node.data.type == NodeType.Heal)
+    {
+        HeroSystem.Instance.HeroView.HealToMax();
+        currentNode = node;
+        node.SetState(NodeState.Current);
+        UnlockNextNodes(node);
+        return;
+    }
+}
 
     void UnlockNextNodes(NodeView node)
 {
+   // Bloquear nodos disponibles que no sean Start
     foreach (var view in nodeLookup.Values)
     {
         if (view.currentState == NodeState.Available &&
@@ -239,12 +266,13 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    // Desbloquear los nodos siguientes
     foreach (var next in node.data.nextNodes)
     {
         if (nodeLookup.TryGetValue(next, out var view))
         {
             if (view.currentState != NodeState.Visited)
-                view.SetState(NodeState.Available);
+                view.SetState(NodeState.Available); // <-- este paso es clave
         }
     }
 }
@@ -302,6 +330,11 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 void ResolveBattleResult()
 {
     var flow = BattleFlowController.Instance;
+
+    // Si no hay nodo de combate actual, significa que no es un nodo Combat (por ejemplo Heal)
+    if (flow.currentCombatNode == null)
+        return; // Heal no necesita resolverse aquí
+
     var nodeData = flow.currentCombatNode;
 
     if (!nodeLookup.TryGetValue(nodeData, out var nodeView))
