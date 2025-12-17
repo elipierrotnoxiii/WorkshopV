@@ -26,6 +26,13 @@ public class HeroSystem : Singleton<HeroSystem>
     }
     private void EnemyTurnPostReaction(EnemyTurnGA enemyTurnGA)
     {
+         if (HeroView.Currenthealth <= 0)
+    {
+        BattleFlowController.Instance.EndCombat(BattleResult.Lose);
+        return;
+    }
+
+
         int burnStacks = HeroView.GetStatusEffectStacks(StatusEffectType.BURN);
         if(burnStacks > 0)
         {
