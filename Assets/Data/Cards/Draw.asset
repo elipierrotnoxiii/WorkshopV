@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8060a2a7e6850a741b13a390a402ff81, type: 3}
   m_Name: Draw
   m_EditorClassIdentifier: 
-  <Description>k__BackingField: Draw 2 cards.
-  <Mana>k__BackingField: 1
+  <Description>k__BackingField: Draw 1 card.
+  <Mana>k__BackingField: 0
   <Image>k__BackingField: {fileID: 21300000, guid: 9a2cdcbe2a3d54de097e0fe98449a11e, type: 3}
   <ManualTargetEffect>k__BackingField:
     rid: -2
@@ -33,4 +33,4 @@ MonoBehaviour:
     - rid: 8607259199133450317
       type: {class: DrawCardsEffect, ns: , asm: Assembly-CSharp}
       data:
-        drawAmount: 2
+        drawAmount: 1
