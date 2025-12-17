@@ -31,6 +31,7 @@ public class BattleFlowController : MonoBehaviour
     public void EndCombat(BattleResult result)
     {
         lastResult = result;
+        ActionSystem.Instance.ResetSystem();
         SceneManager.LoadScene("NodeScene");
     }
 }
