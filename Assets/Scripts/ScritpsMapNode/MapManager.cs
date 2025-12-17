@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 
 public class MapManager : MonoBehaviour
@@ -17,22 +18,33 @@ public class MapManager : MonoBehaviour
     new int[] { 1, 2, 3, 3, 1, 1 }     // 11 nodos
 };
 
-    private NodeView currentNode;
+    private NodeView currentNode ;
     private List<List<NodeData>> mapData;
     private Dictionary<NodeData, NodeView> nodeLookup = new();
 
     void Awake()
     {
+        if (Instance != null)
+    {
+        Destroy(gameObject);
+        return;
+    }
+
         Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void Start()
     {
+       if (mapData == null || mapData.Count == 0)
+    {
         GenerateMap();
         DrawMap();
         DrawConnections();
-
-        AutoSelectStartNode();
+        InitializeStartNode();
+    }
     }
 
     void GenerateMap()
@@ -190,34 +202,41 @@ public class MapManager : MonoBehaviour
         if (node == null)
         return;
 
-    if (node.currentState != NodeState.Available &&
+        if (node.currentState != NodeState.Available &&
         node.currentState != NodeState.Current)
         return;
 
-    if (currentNode == null)
-    {
-        currentNode = node;
-        node.SetState(NodeState.Current);
-        UnlockNextNodes(node);
-        return;
-    }
+        if (currentNode == null)
+        {
+            currentNode = node;
+            node.SetState(NodeState.Current);
+            UnlockNextNodes(node);
+            return;
+        }
 
-    if (!currentNode.data.nextNodes.Contains(node.data))
-        return;
+        if (!currentNode.data.nextNodes.Contains(node.data))
+            return;
 
-        currentNode.SetState(NodeState.Visited);
-        node.SetState(NodeState.Current);
-        currentNode = node;
+        // SOLO combatimos, no desbloqueamos aún
+        if (node.data.type == NodeType.Combat)
+        {
+            currentNode = node;
+            node.SetState(NodeState.Current);
+            BattleFlowController.Instance.StartCombat(node.data);
+            return;
+        }
 
-        UnlockNextNodes(node);
     }
 
     void UnlockNextNodes(NodeView node)
 {
     foreach (var view in nodeLookup.Values)
     {
-        if (view.currentState == NodeState.Available)
+        if (view.currentState == NodeState.Available &&
+            view.data.type != NodeType.Start)
+        {
             view.SetState(NodeState.Locked);
+        }
     }
 
     foreach (var next in node.data.nextNodes)
@@ -230,17 +249,87 @@ public class MapManager : MonoBehaviour
     }
 }
 
-void AutoSelectStartNode()
+void InitializeStartNode()
 {
-    foreach (var pair in nodeLookup)
+    foreach (var floor in mapData)
     {
-        if (pair.Key.type == NodeType.Start)
+        foreach (var node in floor)
         {
-            currentNode = pair.Value;
-            pair.Value.SetState(NodeState.Current);
-            UnlockNextNodes(pair.Value);
-            break;
+            if (node.type == NodeType.Start)
+            {
+                var view = nodeLookup[node];
+                currentNode = view;
+                view.SetState(NodeState.Current);
+                UnlockNextNodes(view);
+                return;
+            }
         }
+    }
+}
+
+void OnEnable()
+{
+    SceneManager.sceneLoaded += OnSceneLoaded;
+
+    if (BattleFlowController.Instance == null)
+        return;
+
+    if (BattleFlowController.Instance.lastResult == BattleResult.None)
+        return;
+
+    ResolveBattleResult();
+}
+
+void OnDisable()
+{
+    SceneManager.sceneLoaded -= OnSceneLoaded;
+}
+
+void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+{
+    if (scene.name == "NodeScene")
+    {
+        SetMapVisible(true);
+
+        if (BattleFlowController.Instance != null &&
+            BattleFlowController.Instance.lastResult != BattleResult.None)
+        {
+            ResolveBattleResult();
+        }
+    }
+}
+
+void ResolveBattleResult()
+{
+    var flow = BattleFlowController.Instance;
+    var nodeData = flow.currentCombatNode;
+
+    if (!nodeLookup.TryGetValue(nodeData, out var nodeView))
+        return;
+
+    if (flow.lastResult == BattleResult.Win)
+    {
+        nodeView.SetState(NodeState.Visited);
+        currentNode = nodeView;
+
+        nodeView.SetState(NodeState.Current);
+
+        UnlockNextNodes(nodeView);
+    }
+    else if (flow.lastResult == BattleResult.Lose)
+    {
+        nodeView.SetState(NodeState.Current);
+        currentNode = nodeView;
+    }
+
+    flow.lastResult = BattleResult.None;
+}
+
+public void SetMapVisible(bool visible)
+{
+    for (int i = 0; i < transform.childCount; i++)
+    {
+        transform.GetChild(i).gameObject.SetActive(visible);
     }
 }
 
