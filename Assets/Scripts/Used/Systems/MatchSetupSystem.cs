@@ -8,6 +8,7 @@ public class MatchSetupSystem : MonoBehaviour
     [SerializeField] private List<EnemyData> enemyDatas;
     private void Start()
     {
+        Debug.Log($"MatchSetupSystem.Start calling HeroSystem.Setup; HeroSystem.Instance={(HeroSystem.Instance != null ? HeroSystem.Instance.name : "null")}");
         HeroSystem.Instance.Setup(heroData);
         EnemySystem.Instance.Setup(enemyDatas);
         CardSystem.Instance.Setup(heroData.Deck);
