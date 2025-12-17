@@ -12,22 +12,22 @@ public class CardSystem : Singleton<CardSystem>
     private readonly List<Card> drawPile = new();
     private readonly List<Card> discardPile = new();
     private readonly List<Card> hand = new();
-    private void OnEnable()
+   protected override void Awake()
     {
+        base.Awake();
+
+        Debug.Log("CardSystem Awake: " + GetInstanceID());
+        // SE REGISTRA UNA SOLA VEZ
         ActionSystem.AttachPerformer<DrawCardsGA>(DrawCardsPerformer);
         ActionSystem.AttachPerformer<DiscardAllCardsGA>(DiscardAllCardsPerformer);
         ActionSystem.AttachPerformer<PlayCardGA>(PlayCardPerformer);
-    }
-    private void OnDisable()
-    {
-        ActionSystem.DetachPerformer<DrawCardsGA>();
-        ActionSystem.DetachPerformer<DiscardAllCardsGA>();
-        ActionSystem.DetachPerformer<PlayCardGA>();
     }
 
     // Publics
     public void Setup(List<CardData> deckData)
     {
+        ResetCombat();
+
         foreach(var cardData in deckData)
         {
             Card card = new(cardData);
@@ -107,4 +107,12 @@ public class CardSystem : Singleton<CardSystem>
         yield return tween.WaitForCompletion();
         Destroy(cardView.gameObject);
     }
+
+    public void ResetCombat()
+{
+    drawPile.Clear();
+    discardPile.Clear();
+    hand.Clear();
+    
+}
 }

@@ -71,8 +71,11 @@ public class ActionSystem : Singleton<ActionSystem>
     {
         Type type = typeof(T);
         IEnumerator wrappedPerformer(GameAction action) => performer((T)action);
-        if(performers.ContainsKey(type)) performers[type] = wrappedPerformer;
-        else performers.Add(type, wrappedPerformer);
+
+       if (!performers.ContainsKey(type))
+        {
+            performers.Add(type, wrappedPerformer);
+        }
     }
     public static void DetachPerformer<T>() where T : GameAction
     {
@@ -101,5 +104,14 @@ public class ActionSystem : Singleton<ActionSystem>
             void wrappedReaction(GameAction action) => reaction((T)action);
             subs[typeof(T)].Remove(wrappedReaction);
         }
+    }
+
+    public void ResetSystem()
+    {
+        preSubs.Clear();
+        postSubs.Clear();
+        performers.Clear();
+        reactions = null;
+        IsPerforming = false;
     }
 }
