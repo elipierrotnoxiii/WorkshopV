@@ -12,16 +12,25 @@ public class CombatantView : MonoBehaviour
     public int MaxHealth {  get; private set; }
     public int Currenthealth {  get; private set; }
     private Dictionary<StatusEffectType, int> statusEffects = new();
-    [SerializeField] private AudioClip takeDamageSFX;
-    protected void SetUpBase(int health, Sprite image)
-    {
-        MaxHealth = Currenthealth = health;
-        spriteRenderer.sprite = image;
-        UpdateHealthText();
-    }
+    protected void SetUpBase(int health, Sprite image, bool onlyIfZero = false)
+{
+    MaxHealth = health;
+
+    if (!onlyIfZero || Currenthealth <= 0)
+        Currenthealth = MaxHealth;
+
+    spriteRenderer.sprite = image;
+    UpdateHealthText();
+}
     private void UpdateHealthText()
     {
         healthText.text = "HP: " + Currenthealth;
+        // If this is the hero view, update persisted health in the HeroSystem
+        if (GetComponent<HeroView>() != null && HeroSystem.Instance != null)
+        {
+            Debug.Log($"CombatantView.UpdateHealthText hero current={Currenthealth} max={MaxHealth}");
+            HeroSystem.Instance.SetPersistedHealth(Currenthealth, MaxHealth);
+        }
     }
     public void Damage(int damageAmount)
     {
@@ -47,13 +56,6 @@ public class CombatantView : MonoBehaviour
             {
                 Currenthealth = 0;
             }
-        }
-        if (takeDamageSFX != null)
-        {
-            AudioSource.PlayClipAtPoint(
-                takeDamageSFX,
-                transform.position
-            );
         }
         transform.DOShakePosition(0.2f, 0.5f);
         UpdateHealthText();
@@ -86,5 +88,21 @@ public class CombatantView : MonoBehaviour
     {
         if (statusEffects.ContainsKey(type)) return statusEffects[type];
         else return 0;
+    }
+
+    public void HealToMax()
+    {
+        Currenthealth = MaxHealth;
+        UpdateHealthText();
+    }
+
+    // Load persisted state (used by HeroSystem to restore hero between scenes)
+    public void LoadState(int current, int max, Sprite image)
+    {
+        MaxHealth = max;
+        Currenthealth = current;
+        if (spriteRenderer != null)
+            spriteRenderer.sprite = image;
+        UpdateHealthText();
     }
 }
