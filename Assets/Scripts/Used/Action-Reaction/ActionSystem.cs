@@ -62,6 +62,9 @@ public class ActionSystem : Singleton<ActionSystem>
     }
     private IEnumerator PerformReactions()
     {
+         if (reactions == null || reactions.Count == 0)
+        yield break;
+
         foreach (var reaction in reactions)
         {
             yield return Flow(reaction);
