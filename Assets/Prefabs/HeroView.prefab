@@ -48,6 +48,7 @@ MonoBehaviour:
   healthText: {fileID: 2607498708357521812}
   spriteRenderer: {fileID: 215214724480940466}
   statusEffectsUI: {fileID: 1631597125270519972}
+  takeDamageSFX: {fileID: 8300000, guid: 5d1f369b476978e46b218076cd2ac2e6, type: 3}
 --- !u!1001 &8288928487366958055
 PrefabInstance:
   m_ObjectHideFlags: 0

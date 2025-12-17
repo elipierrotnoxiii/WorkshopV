@@ -31,6 +31,7 @@ MonoBehaviour:
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
         damageAmount: 3
+        hitSFX: {fileID: 8300000, guid: 9e2625e0aa763ae48b6b35c03adccae2, type: 3}
     - rid: 8607259199133450318
       type: {class: AllEnemiesTM, ns: , asm: Assembly-CSharp}
       data: 
