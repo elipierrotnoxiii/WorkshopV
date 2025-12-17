@@ -12,6 +12,7 @@ public class CombatantView : MonoBehaviour
     public int MaxHealth {  get; private set; }
     public int Currenthealth {  get; private set; }
     private Dictionary<StatusEffectType, int> statusEffects = new();
+    [SerializeField] private AudioClip takeDamageSFX;
     protected void SetUpBase(int health, Sprite image)
     {
         MaxHealth = Currenthealth = health;
@@ -46,6 +47,13 @@ public class CombatantView : MonoBehaviour
             {
                 Currenthealth = 0;
             }
+        }
+        if (takeDamageSFX != null)
+        {
+            AudioSource.PlayClipAtPoint(
+                takeDamageSFX,
+                transform.position
+            );
         }
         transform.DOShakePosition(0.2f, 0.5f);
         UpdateHealthText();

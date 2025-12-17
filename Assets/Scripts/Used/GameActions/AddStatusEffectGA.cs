@@ -6,10 +6,15 @@ public class AddStatusEffectGA : GameAction
     public StatusEffectType StatusEffectType {  get; private set; }
     public int StackCount {  get; private set; }
     public List<CombatantView> Targets { get; private set; }
+    public AudioClip Sound { get; private set; }
     public AddStatusEffectGA(StatusEffectType statusEffectType, int stackCount, List<CombatantView> targets)
     {
         StatusEffectType = statusEffectType;
         StackCount = stackCount;
         Targets = targets;
+    }
+    public void SetSound(AudioClip clip)
+    {
+        Sound = clip;
     }
 }

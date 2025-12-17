@@ -35,3 +35,4 @@ MonoBehaviour:
       data:
         statusEffectType: 0
         stackCount: 5
+        applyStatusSFX: {fileID: 8300000, guid: 824815a2f168fe842a485921bb909fe5, type: 3}

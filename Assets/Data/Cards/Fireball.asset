@@ -25,3 +25,4 @@ MonoBehaviour:
       type: {class: DealDamageEffect, ns: , asm: Assembly-CSharp}
       data:
         damageAmount: 5
+        hitSFX: {fileID: 8300000, guid: e48c3ef6f890deb4fa5ba4494e3ee1cb, type: 3}

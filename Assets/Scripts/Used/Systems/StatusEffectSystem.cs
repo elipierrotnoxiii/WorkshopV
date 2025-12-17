@@ -13,7 +13,14 @@ public class StatusEffectSystem : MonoBehaviour
     }
     private IEnumerator AddStatusEffectPerformer(AddStatusEffectGA addStatusEffectGA)
     {
-        foreach(var target in addStatusEffectGA.Targets)
+        if (addStatusEffectGA.Sound != null && addStatusEffectGA.Targets.Count > 0)
+        {
+            AudioSource.PlayClipAtPoint(
+                addStatusEffectGA.Sound,
+                addStatusEffectGA.Targets[0].transform.position
+            );
+        }
+        foreach (var target in addStatusEffectGA.Targets)
         {
             target.AddStatusEffect(addStatusEffectGA.StatusEffectType, addStatusEffectGA.StackCount);
             yield return null;

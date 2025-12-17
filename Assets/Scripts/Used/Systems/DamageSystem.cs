@@ -17,7 +17,14 @@ public class DamageSystem : MonoBehaviour
     }
     private IEnumerator DealDamagePerformer(DealDamageGA dealDamageGA)
     {
-        foreach(var target in dealDamageGA.Targets)
+        if (dealDamageGA.Sound != null)
+        {
+            AudioSource.PlayClipAtPoint(
+                dealDamageGA.Sound,
+                dealDamageGA.Caster.transform.position
+            );
+        }
+        foreach (var target in dealDamageGA.Targets)
         {
             target.Damage(dealDamageGA.Amount);
             Instantiate(damageVFX,target.transform.position, Quaternion.identity);
@@ -28,11 +35,11 @@ public class DamageSystem : MonoBehaviour
                 {
                     KillEnemyGA killEnemyGA = new(enemyView);
                     ActionSystem.Instance.AddReaction(killEnemyGA);
-                    enemiesKilled += 1;
-                    if (enemiesKilled >= 3)
-                    {
-                        panelVictory.SetActive(true);
-                    }
+                    //enemiesKilled += 1;
+                    //if (enemiesKilled >= 3)
+                    //{
+                    //    panelVictory.SetActive(true);
+                    //}
                 }
                 else
                 {

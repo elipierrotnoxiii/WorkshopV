@@ -226,6 +226,7 @@ MonoBehaviour:
   healthText: {fileID: 1407997492988828433}
   spriteRenderer: {fileID: 3844135259630420791}
   statusEffectsUI: {fileID: 2378213898659674657}
+  takeDamageSFX: {fileID: 8300000, guid: 5d1f369b476978e46b218076cd2ac2e6, type: 3}
   attackText: {fileID: 3396643927994221222}
 --- !u!65 &8709450081829706471
 BoxCollider:
