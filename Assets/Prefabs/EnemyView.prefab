@@ -329,6 +329,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6280132003009346163, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_fontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6280132003009346163, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 7326415936675896131, guid: 0a53efcd325697649bb31944e34253ee, type: 3}
       propertyPath: counterSprite
       value: 
