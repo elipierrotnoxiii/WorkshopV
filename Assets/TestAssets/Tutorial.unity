@@ -2548,7 +2548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd9eb3cf409a041ada66623d801f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameSceneName: GameScene
+  gameSceneName: NodeScene
   panels:
   - {fileID: 1623381602}
   - {fileID: 939779914}
