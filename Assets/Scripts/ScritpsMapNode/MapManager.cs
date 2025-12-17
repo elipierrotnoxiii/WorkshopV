@@ -166,6 +166,9 @@ public class MapManager : MonoBehaviour
         }
 
         nodeLookup.Clear();
+        Vector3 sumPos = Vector3.zero;
+        int posCount = 0;
+
         for(int f = 0; f < mapData.Count; f++)
         {
             var floor = mapData[f];
@@ -173,12 +176,26 @@ public class MapManager : MonoBehaviour
 
             for(int i = 0; i < floor.Count; i++)
             {
+                
+
                Vector3 pos = new Vector3(-f * xSpacing, startX + i * ySpacing, 0);
                var go = Instantiate(nodePrefab, pos, Quaternion.identity, transform);
+               go.transform.rotation = Quaternion.Euler(90f,0f, 0f);
                var view = go.GetComponent<NodeView>();
                view.Initialize(floor[i]);
                nodeLookup.Add(floor[i], view);
+               // accumulate position to compute center later
+               sumPos += pos;
+               posCount++;
             }
+        }
+
+        // Center main camera on the average position of instantiated nodes
+        if (posCount > 0 && Camera.main != null)
+        {
+            Vector3 center = sumPos / posCount;
+            var cam = Camera.main.transform;
+            cam.position = new Vector3(center.x, center.y, cam.position.z);
         }
     }
 
